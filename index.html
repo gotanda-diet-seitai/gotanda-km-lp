@@ -90,64 +90,92 @@
       "ChatGPT 画像 2026年10月3日 23_05_12.png"
     ];
 
-    async function loadImages() {
-      const container = document.getElementById("lp-images");
-      const status = document.getElementById("status");
+   
+async function loadImages() {
+  const container = document.getElementById("lp-images");
+  const status = document.getElementById("status");
+  const reservationImage = "BA1A822F-639D-4284-851A-32010BD99D02.png";
 
-      try {
-        const response = await fetch(
-          `https://api.github.com/repos/${owner}/${repo}/contents/`
-        );
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/`
+    );
 
-        if (!response.ok) {
-          throw new Error("GitHubのファイルを取得できませんでした");
-        }
-
-        const files = await response.json();
-        const fileMap = new Map(
-          files
-            .filter(file => file.type === "file")
-            .map(file => [file.name, file])
-        );
-
-        let loaded = 0;
-        const missing = [];
-
-        imageOrder.forEach((name, index) => {
-          const file = fileMap.get(name);
-
-          if (!file) {
-            missing.push(name);
-            return;
-          }
-
-          const img = document.createElement("img");
-          img.src = file.download_url;
-          img.alt = `五反田K&M整体院 LP画像 ${index + 1}`;
-          img.loading = index < 3 ? "eager" : "lazy";
-          img.decoding = "async";
-
-          container.appendChild(img);
-          loaded++;
-        });
-
-        if (missing.length > 0) {
-          console.warn("見つからないファイル:", missing);
-        }
-
-        status.textContent = missing.length
-          ? `画像 ${loaded} 枚を表示中。一部のファイル名を確認してください。`
-          : "";
-
-      } catch (error) {
-        console.error(error);
-        status.textContent =
-          "画像を読み込めませんでした。GitHubの設定を確認してください。";
-      }
+    if (!response.ok) {
+      throw new Error("GitHubの画像を取得できませんでした");
     }
 
-    loadImages();
-  </script>
+    const files = await response.json();
+    const fileMap = new Map(
+      files
+        .filter(file => file.type === "file")
+        .map(file => [file.name, file])
+    );
 
-</body>
-</html>
+    const images = imageOrder.filter(
+      name => name !== reservationImage
+    );
+
+    let loaded = 0;
+    const missing = [];
+
+    function addReservationButton() {
+      const file = fileMap.get(reservationImage);
+
+      if (!file) {
+        missing.push(reservationImage);
+        return;
+      }
+
+      const img = document.createElement("img");
+      img.src = file.download_url;
+      img.alt = "ホットペッパービューティー予約ボタン";
+      img.style.cssText =
+        "display:block;width:100%;max-width:600px;height:auto;margin:24px auto;";
+      container.appendChild(img);
+    }
+
+    images.forEach((name, index) => {
+      const file = fileMap.get(name);
+
+      if (!file) {
+        missing.push(name);
+        return;
+      }
+
+      const img = document.createElement("img");
+      img.src = file.download_url;
+      img.alt = `五反田K&M整体院 LP画像 ${index + 1}`;
+      img.style.cssText = "display:block;width:100%;height:auto;";
+      img.loading = index < 3 ? "eager" : "lazy";
+      img.decoding = "async";
+      container.appendChild(img);
+      loaded++;
+
+      if (index === 0) {
+        addReservationButton();
+      }
+
+      if (index === Math.floor(images.length / 2) - 1) {
+        addReservationButton();
+      }
+    });
+
+    addReservationButton();
+
+    status.textContent = missing.length
+      ? `画像${loaded}枚を表示中。一部の画像を確認してください。`
+      : "";
+
+    if (missing.length) {
+      console.warn("見つからないファイル:", missing);
+    }
+  } catch (error) {
+    console.error(error);
+    status.textContent =
+      "画像を読み込めませんでした。GitHubの設定を確認してください。";
+  }
+}
+
+loadImages();
+
