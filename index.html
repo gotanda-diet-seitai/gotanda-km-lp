@@ -19,7 +19,7 @@ fetch(`https://api.github.com/repos/${repo}/contents/`)
 .then(files => {
   const images = files
     .filter(file => file.type === "file" && /\.(png|jpe?g|webp|gif)$/i.test(file.name))
-    .sort((a, b) => a.name.localeCompare(b.name, "ja", { numeric: true }));
+  .sort((a, b) => a.name.localeCompare(b.name, "ja", { numeric: true }))
   const container = document.getElementById("images");
   images.forEach(file => {
     const img = document.createElement("img");
