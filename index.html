@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>五反田K&M整体院｜ダイエットLP</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      background: #fff;
-      text-align: center;
-    }
-    img {
-      display: block;
-      width: 100%;
-      max-width: 800px;
-      height: auto;
-      margin: 0 auto;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五反田K&M整体院｜ダイエットLP</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; background: #fff; text-align: center; }
+img { display: block; width: 100%; max-width: 800px; height: auto; margin: 0 auto; }
+</style>
 </head>
 <body>
-  <img src="0F107F63-35C6-4217-A33B-CEAEDAB05A10.png" alt="五反田K&M整体院 ダイエットLP">
+<div id="images"></div>
+<script>
+const repo = "kouichi-kk/gotanda-km-lp";
+fetch(`https://api.github.com/repos/${repo}/contents/`)
+.then(response => response.json())
+.then(files => {
+  const images = files
+    .filter(file => file.type === "file" && /\.(png|jpe?g|webp|gif)$/i.test(file.name))
+    .sort((a, b) => a.name.localeCompare(b.name, "ja", { numeric: true }));
+  const container = document.getElementById("images");
+  images.forEach(file => {
+    const img = document.createElement("img");
+    img.src = file.download_url;
+    img.alt = "";
+    img.loading = "lazy";
+    container.appendChild(img);
+  });
+  if (images.length === 0) {
+    container.textContent = "画像が見つかりません。";
+  }
+})
+.catch(() => {
+  document.getElementById("images").textContent =
+    "画像を読み込めませんでした。";
+});
+</script>
 </body>
 </html>
