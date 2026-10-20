@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>五反田K&M整体院｜ダイエットLP</title>
 <style>
 * { box-sizing: border-box; }
@@ -19,7 +19,7 @@ fetch(`https://api.github.com/repos/${repo}/contents/`)
 .then(files => {
   const images = files
     .filter(file => file.type === "file" && /\.(png|jpe?g|webp|gif)$/i.test(file.name))
-  .sort((a, b) => a.name.localeCompare(b.name, "ja", { numeric: true }))
+    .sort((a, b) => a.name.localeCompare(b.name, "ja", { numeric: true }));
   const container = document.getElementById("images");
   images.forEach(file => {
     const img = document.createElement("img");
@@ -28,13 +28,10 @@ fetch(`https://api.github.com/repos/${repo}/contents/`)
     img.loading = "lazy";
     container.appendChild(img);
   });
-  if (images.length === 0) {
-    container.textContent = "画像が見つかりません。";
-  }
+  if (images.length === 0) container.textContent = "画像が見つかりません。";
 })
 .catch(() => {
-  document.getElementById("images").textContent =
-    "画像を読み込めませんでした。";
+  document.getElementById("images").textContent = "画像を読み込めませんでした。";
 });
 </script>
 </body>
