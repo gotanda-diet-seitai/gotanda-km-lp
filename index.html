@@ -1,59 +1,80 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>五反田K&M整体院｜ダイエットLP</title>
+  <title>五反田K&M整体院｜ダイエット×姿勢改善</title>
+  <meta name="description" content="五反田K&M整体院。ダイエットと姿勢改善をサポートします。">
   <style>
     * {
       box-sizing: border-box;
     }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      background: #fff;
+    html {
+      scroll-behavior: smooth;
     }
 
-    #lp-images {
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: sans-serif;
+    }
+
+    main {
       width: 100%;
       max-width: 900px;
       margin: 0 auto;
-      padding: 0;
     }
 
-    #lp-images img {
+    .lp-image {
       display: block;
       width: 100%;
       height: auto;
       margin: 0;
-      padding: 0;
     }
 
-    #status {
-      padding: 24px;
+    .reservation {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 12px 0;
       text-align: center;
+      background: #ffffff;
+    }
+
+    .reservation img {
+      display: block;
+      width: 100%;
+      max-width: 700px;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    .reservation a {
+      display: block;
+      width: 100%;
+      text-decoration: none;
+    }
+
+    .error-message {
+      padding: 12px;
+      color: #b00020;
       font-size: 14px;
-      color: #555;
+      text-align: center;
+      overflow-wrap: anywhere;
     }
   </style>
 </head>
-<body>
 
-  <main id="lp-images"></main>
-  <div id="status">画像を読み込んでいます...</div>
+<body>
+  <main id="lp"></main>
 
   <script>
-    const owner = "kouichi-kk";
-    const repo = "gotanda-km-lp";
-
-    // 表示順：手書きメモの番号順
     const imageOrder = [
       "ChatGPT 画像 2026年10月3日 15_21_03.png",
-      "0F107F63-35C6-4217-A33B-CEAFDAB05A10.png",
       "ChatGPT 画像 2026年10月3日 13_32_39.png",
+      "0F107F63-35C6-4217-A33B-CEAEDAB05A10.png",
       "BA1A822F-639D-4284-851A-32010BDD99D02.png",
       "ChatGPT 画像 2026年10月3日 13_35_57.png",
       "LINE_NOTE_260603_1.jpg",
@@ -65,13 +86,13 @@
       "ChatGPT 画像 2026年10月3日 13_32_39.png",
       "BA1A822F-639D-4284-851A-32010BDD99D02.png",
       "ChatGPT 画像 2026年10月3日 21_55_22.png",
-      "ChatGPT 画像 2026年10月3日 14_03_45.png",
-      "LINE_NOTE_261003_2.jpg",
-      "LINE_NOTE_261003_3.jpg",
+      "スクリーンショット 2026-10-03 135104.png",
+      "LINE_NOTE_260603_2.jpg",
+      "LINE_NOTE_260603_7.jpg",
       "ChatGPT 画像 2026年10月3日 13_32_39.png",
       "BA1A822F-639D-4284-851A-32010BDD99D02.png",
-      "ChatGPT 画像 2026年10月3日 22_19_22.png",
-      "ChatGPT 画像 2026年10月3日 14_03_45.png",
+      "ChatGPT 画像 2026年10月3日 21_18_22.png",
+      "ChatGPT 画像 2026年10月3日 14_07_45.png",
       "ChatGPT 画像 2026年10月3日 14_10_34.png",
       "ChatGPT 画像 2026年10月3日 22_24_13.png",
       "LPサイズ_人生最後のダイエット (1).png",
@@ -79,103 +100,84 @@
       "ChatGPT 画像 2026年10月3日 14_54_58.png",
       "IMG_8692.png",
       "ChatGPT 画像 2026年10月3日 22_41_03.png",
-
-      // 29番・30番：修正済み
       "ChatGPT 画像 2026年10月3日 15_12_17.png",
       "ChatGPT 画像 2026年10月3日 13_32_39.png",
-
       "BA1A822F-639D-4284-851A-32010BDD99D02.png",
       "ChatGPT 画像 2026年10月3日 15_14_35.png",
       "ChatGPT 画像 2026年10月3日 15_17_18.png",
       "ChatGPT 画像 2026年10月3日 23_05_12.png"
     ];
 
-   
-async function loadImages() {
-  const container = document.getElementById("lp-images");
-  const status = document.getElementById("status");
-  const reservationImage = "BA1A822F-639D-4284-851A-32010BD99D02.png";
+    // ホットペッパーの予約ページ
+    const reservationUrl =
+      "https://beauty.hotpepper.jp/kr/slnH000685575/";
 
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/`
-    );
+    // ホットペッパーのリンク画像
+    const reservationImage =
+      "0F107F63-35C6-4217-A33B-CEAEDAB05A10.png";
 
-    if (!response.ok) {
-      throw new Error("GitHubの画像を取得できませんでした");
-    }
+    const lp = document.getElementById("lp");
 
-    const files = await response.json();
-    const fileMap = new Map(
-      files
-        .filter(file => file.type === "file")
-        .map(file => [file.name, file])
-    );
-
-    const images = imageOrder.filter(
-      name => name !== reservationImage
-    );
-
-    let loaded = 0;
-    const missing = [];
-
+    // 予約ボタンを作成
     function addReservationButton() {
-      const file = fileMap.get(reservationImage);
+      const section = document.createElement("section");
+      section.className = "reservation";
 
-      if (!file) {
-        missing.push(reservationImage);
-        return;
-      }
+      const link = document.createElement("a");
+      link.href = reservationUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.setAttribute("aria-label", "ホットペッパーで予約する");
 
       const img = document.createElement("img");
-      img.src = file.download_url;
-      img.alt = "ホットペッパービューティー予約ボタン";
-      img.style.cssText =
-        "display:block;width:100%;max-width:600px;height:auto;margin:24px auto;";
-      container.appendChild(img);
+      img.src = encodeURI("./" + reservationImage);
+      img.alt = "ホットペッパーで予約する";
+      img.loading = "lazy";
+
+      img.onerror = function () {
+        section.innerHTML =
+          '<div class="error-message">予約ボタン画像を読み込めません。ファイル名を確認してください。</div>';
+      };
+
+      link.appendChild(img);
+      section.appendChild(link);
+      lp.appendChild(section);
     }
 
-    images.forEach((name, index) => {
-      const file = fileMap.get(name);
+    // 予約ボタン画像そのものは通常画像として重複表示しない
+    const contentImages = imageOrder.filter(
+      filename => filename !== reservationImage
+    );
 
-      if (!file) {
-        missing.push(name);
-        return;
-      }
-
-      const img = document.createElement("img");
-      img.src = file.download_url;
-      img.alt = `五反田K&M整体院 LP画像 ${index + 1}`;
-      img.style.cssText = "display:block;width:100%;height:auto;";
-      img.loading = index < 3 ? "eager" : "lazy";
-      img.decoding = "async";
-      container.appendChild(img);
-      loaded++;
-
+    // 画像を指定順に並べ、上部・途中・一番下に予約ボタンを設置
+    contentImages.forEach((filename, index) => {
       if (index === 0) {
         addReservationButton();
       }
 
-      if (index === Math.floor(images.length / 2) - 1) {
+      const img = document.createElement("img");
+      img.className = "lp-image";
+      img.src = encodeURI("./" + filename);
+      img.alt = "";
+      img.loading = index < 2 ? "eager" : "lazy";
+
+      img.onerror = function () {
+        const error = document.createElement("div");
+        error.className = "error-message";
+        error.textContent =
+          "画像を読み込めませんでした：" + filename;
+        img.replaceWith(error);
+      };
+
+      lp.appendChild(img);
+
+      if (index === Math.floor(contentImages.length / 2) - 1) {
         addReservationButton();
       }
     });
 
+    // 最後に予約ボタン
     addReservationButton();
-
-    status.textContent = missing.length
-      ? `画像${loaded}枚を表示中。一部の画像を確認してください。`
-      : "";
-
-    if (missing.length) {
-      console.warn("見つからないファイル:", missing);
-    }
-  } catch (error) {
-    console.error(error);
-    status.textContent =
-      "画像を読み込めませんでした。GitHubの設定を確認してください。";
-  }
-}
-
-loadImages();
-
+  </script>
+</body>
+</html>
