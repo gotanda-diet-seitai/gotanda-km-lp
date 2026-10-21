@@ -93,7 +93,23 @@
         img.replaceWith(error);
       };
 
-      lp.appendChild(img);
+      const link = document.createElement("a");
+
+if (filename === "ChatGPT 画像 2026年10月3日 13_32_39.png") {
+  link.href = "https://lin.ee/nM7suhP";
+} else if (filename === "BA1A822F-639D-4284-851A-32010BD99D02.png") {
+  link.href = "http://b.hpr.jp/kr/hp/H000685575";
+}
+
+if (link.href) {
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.style.display = "block";
+  link.appendChild(img);
+  lp.appendChild(link);
+} else {
+  lp.appendChild(img);
+}
     });
   </script>
 </body>
